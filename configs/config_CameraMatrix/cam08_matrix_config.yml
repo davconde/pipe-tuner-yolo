@@ -1,0 +1,25 @@
+################################################################################
+# Copyright (c) 2024, NVIDIA CORPORATION.  All rights reserved.
+# NVIDIA Corporation and its licensors retain all intellectual property
+# and proprietary rights in and to this software, related documentation
+# and any modifications thereto.  Any use, reproduction, disclosure or
+# distribution of this software and related documentation without an express
+# license agreement from NVIDIA Corporation is strictly prohibited.
+################################################################################
+
+projectionMatrix_3x4:
+- 1226.65
+- 283.794
+- -13.5192
+- 528.812
+- -100.248
+- 488.383
+- 1156.21
+- -45226.0
+- 0.211133
+- -0.893729
+- 0.395816
+- -1991.94
+modelInfo:
+  height: 250.0
+  radius: 30.0

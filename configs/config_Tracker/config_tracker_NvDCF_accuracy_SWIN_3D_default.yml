@@ -1,0 +1,99 @@
+%YAML:1.0
+################################################################################
+# Copyright (c) 2024, NVIDIA CORPORATION.  All rights reserved.
+# NVIDIA Corporation and its licensors retain all intellectual property
+# and proprietary rights in and to this software, related documentation
+# and any modifications thereto.  Any use, reproduction, disclosure or
+# distribution of this software and related documentation without an express
+# license agreement from NVIDIA Corporation is strictly prohibited.
+################################################################################
+
+BaseConfig:
+  minDetectorConfidence: 0.04504140555020505
+TargetManagement:
+  enableBboxUnClipping: 0
+  preserveStreamUpdateOrder: 0
+  maxTargetsPerStream: 150
+  minIouDiff4NewTarget: 0.7493289488858955
+  minTrackerConfidence: 0.31790113613788024
+  probationAge: 8
+  maxShadowTrackingAge: 75
+  earlyTerminationAge: 1
+TrajectoryManagement:
+  useUniqueID: 0
+  enableReAssoc: 1
+  minMatchingScore4Overall: 0.1826460509416077
+  minTrackletMatchingScore: 0.43307285475707674
+  minMatchingScore4ReidSimilarity: 0.6101580191977841
+  matchingScoreWeight4TrackletSimilarity: 0.019947099953910568
+  matchingScoreWeight4ReidSimilarity: 0.4184342367280858
+  minTrajectoryLength4Projection: 39
+  prepLength4TrajectoryProjection: 50
+  trajectoryProjectionLength: 21
+  maxAngle4TrackletMatching: 138
+  minSpeedSimilarity4TrackletMatching: 0.044282528905539784
+  minBboxSizeSimilarity4TrackletMatching: 0.5740444887481395
+  maxTrackletMatchingTimeSearchRange: 20
+  trajectoryProjectionProcessNoiseScale: 0.0100
+  trajectoryProjectionMeasurementNoiseScale: 100
+  trackletSpacialSearchRegionScale: 0.2598
+  reidExtractionInterval: 0
+DataAssociator:
+  dataAssociatorType: 0
+  associationMatcherType: 1
+  checkClassMatch: 1
+  minMatchingScore4Overall: 0.40842489679919347
+  minMatchingScore4SizeSimilarity: 0.5028785603014438
+  minMatchingScore4Iou: 0.33759408085386783
+  minMatchingScore4VisualSimilarity: 0.4418493290256158
+  matchingScoreWeight4VisualSimilarity: 0.8883782176081545
+  matchingScoreWeight4SizeSimilarity: 0.6331817143070809
+  matchingScoreWeight4Iou: 0.13649225476454815
+  tentativeDetectorConfidence: 0.11364853643615452
+  minMatchingScore4TentativeIou: 0.5926078020048815
+StateEstimator:
+  stateEstimatorType: 3
+  processNoiseVar4Loc: 95.66378118223449
+  processNoiseVar4Vel: 52.01164249047624
+  measurementNoiseVar4Detector: 10000.0
+  measurementNoiseVar4Tracker: 54224.445821125875
+ObjectModelProjection:
+  outputVisibility: 1
+  outputFootLocation: 1
+  maxConvexHullSize: 15
+  cameraModelFilepath:  # Please change to the absolute path on host machine; In order of the source streams
+    - '/media/sdb/pipe-tuner-sample/configs/config_CameraMatrix/cam01_matrix_config.yml'
+    - '/media/sdb/pipe-tuner-sample/configs/config_CameraMatrix/cam02_matrix_config.yml'
+    - '/media/sdb/pipe-tuner-sample/configs/config_CameraMatrix/cam03_matrix_config.yml'
+    - '/media/sdb/pipe-tuner-sample/configs/config_CameraMatrix/cam04_matrix_config.yml'
+    - '/media/sdb/pipe-tuner-sample/configs/config_CameraMatrix/cam05_matrix_config.yml'
+    - '/media/sdb/pipe-tuner-sample/configs/config_CameraMatrix/cam06_matrix_config.yml'
+    - '/media/sdb/pipe-tuner-sample/configs/config_CameraMatrix/cam07_matrix_config.yml'
+    - '/media/sdb/pipe-tuner-sample/configs/config_CameraMatrix/cam08_matrix_config.yml'
+VisualTracker:
+  visualTrackerType: 1
+  useColorNames: 1
+  useHog: 1
+  featureImgSizeLevel: 4
+  featureFocusOffsetFactor_y: -0.21821554887423156
+  filterLr: 0.46756625154532483
+  filterChannelWeightsLr: 0.034405707625009656
+  gaussianSigma: 1.0184572640043077
+ReID:
+  reidType: 2
+  outputReidTensor: 1
+  batchSize: 100
+  workspaceSize: 1000
+  reidFeatureSize: 256
+  reidHistorySize: 100
+  inferDims: [3, 256, 128]
+  networkMode: 1
+  inputOrder: 0
+  colorFormat: 0
+  offsets: [127.5, 127.5, 127.5]
+  netScaleFactor: 0.007843137254902
+  keepAspc: 1
+  addFeatureNormalization: 1
+  tltModelKey: nvidia_tao
+  onnxFile: /opt/nvidia/deepstream/deepstream/sources/apps/sample_apps/deepstream-fewshot-learning-app/models/mtmc/swin_tiny_v2.onnx
+  modelEngineFile: /opt/nvidia/deepstream/deepstream/sources/apps/sample_apps/deepstream-fewshot-learning-app/models/mtmc/swin_tiny_v2.onnx_b100_gpu0_fp16.engine

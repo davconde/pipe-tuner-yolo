@@ -1,0 +1,26 @@
+%YAML:1.0
+################################################################################
+# Copyright (c) 2024, NVIDIA CORPORATION.  All rights reserved.
+# NVIDIA Corporation and its licensors retain all intellectual property
+# and proprietary rights in and to this software, related documentation
+# and any modifications thereto.  Any use, reproduction, disclosure or
+# distribution of this software and related documentation without an express
+# license agreement from NVIDIA Corporation is strictly prohibited.
+################################################################################
+#
+EvalDevKitType: 3 # Default: 3, {0: MATLAB-based devkit, 1: py-motmetrics based devkit, 2: TrackEval, 3: MTMC}
+UseArchivedTrajData: 0  # Default: 0, {0: DS KITTI output converted to MOT , 1: Tracker's direct MOT output}
+
+# Root path to the MOT16 training dataset
+# MotEvalGtDataRoot: "datasetPath"
+MtmcRoot: "mtmcroot"
+MtmcCalibrationPath: "mtmccalibrationpath"
+MtmcPlaybackPath: "mtmcplaybackpath"
+MtmcGroundTruthPath: "mtmcgroundtruthpath"
+
+# List of streams
+MotSceneNames: [seqlist]
+
+MultiStreamMot16DsAppConfig_1080p: "dsappconfig1080p"
+
+Ds2MtmcConversionScriptPath: "/pipe-tuner/utils/dsDump2Mtmc.py"

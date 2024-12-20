@@ -1,0 +1,27 @@
+%YAML:1.0
+################################################################################
+# Copyright (c) 2024, NVIDIA CORPORATION.  All rights reserved.
+# NVIDIA Corporation and its licensors retain all intellectual property
+# and proprietary rights in and to this software, related documentation
+# and any modifications thereto.  Any use, reproduction, disclosure or
+# distribution of this software and related documentation without an express
+# license agreement from NVIDIA Corporation is strictly prohibited.
+################################################################################
+#
+EvalDevKitType: 2 # Default: 0, {0: MATLAB-based devkit, 1: py-motmetrics based devkit}
+UseArchivedTrajData: 0  # Default: 0, {0: DS KITTI output converted to MOT , 1: Tracker's direct MOT output}
+
+# for Py-MotMetrics based MOT evaluation
+TrackEvalScriptPath: "/pipe-tuner/3rdparty/TrackEval/scripts/run_mot_challenge.py"
+PyMotMetricsSeqMapPath: "seqmap"
+
+# Root path to the MOT16 training dataset
+MotEvalGtDataRoot: "datasetPath"
+
+# List of MOT scenes
+MotSceneNames: [seqlist]
+
+MultiStreamMot16DsAppConfig_1080p: "dsappconfig1080p"
+
+KittiTrack2MotConversionScriptPath: "/pipe-tuner/utils/kittiTrack2mot.sh"
+KittiDetect2MotConversionScriptPath: "/pipe-tuner/utils/kittiDetect2mot.sh"

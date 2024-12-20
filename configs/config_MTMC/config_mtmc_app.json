@@ -1,0 +1,68 @@
+{
+    "io": {
+        "enableDebug": false,
+        "batchId": "1",
+        "outputDirPath": "results",
+        "videoDirPath": "metropolis-apps-data/videos",
+        "jsonDataPath": "metropolis-apps-data/playback/mtmc_buildingK_playback.json",
+        "protobufDataPath": "",
+        "groundTruthPath": "",
+        "groundTruthFrameIdOffset": 1,
+        "useFullBodyGroundTruth": true,
+        "use3DEvaluation": true,
+        "plotEvaluationGraphs": false
+    },
+    "preprocessing": {
+        "filterByRegionsOfInterest": false,
+        "timestampThreshMin": null,
+        "locationBboxBottomGapThresh": 0.03655031219375923,
+        "locationConfidenceThresh": 0.7694033469655515,
+        "locationBboxAreaThresh": 0.0011272035841692295,
+        "locationBboxAspectRatioThresh": 0.5599062441763019,
+        "embeddingConfidenceThresh": 0.3096315031747603,
+        "embeddingBboxAreaThresh": 0.001143028173273924,
+        "embeddingBboxAspectRatioThresh": 0.8612275245402623,
+        "embeddingVisibilityThresh": 0.5378115054115956,
+        "behaviorConfidenceThresh": 0.4281218382853804,
+        "behaviorBboxAreaThresh": 0.0010435115344250227,
+        "behaviorBboxAspectRatioThresh": 0.7869893071406692,
+        "behaviorLengthThreshSec": 0.0,
+        "shortBehaviorFinishThreshMin": 1.843014945563044,
+        "behaviorNumLocationsMax": 300,
+        "behaviorSplitThreshSec": 7,
+        "behaviorRetentionInStateSec": 10,
+        "mtmcPlusRetentionInStateSec": 10,
+        "mtmcPlusInitBufferLenSec": 10
+    },
+    "localization": {
+        "rectifyBboxByCalibration": false,
+        "peopleHeightMaxLengthSec": 600,
+        "peopleHeightNumSamplesMax": 1000,
+        "peopleHeightNumBatchFrames": 10000,
+        "peopleHeightEstimationRatio": 0.7,
+        "peopleHeightVisibilityThresh": 0.8,
+        "overwrittenPeopleHeightMeter": null
+    },
+    "clustering": {
+        "clusteringAlgo": "AgglomerativeClustering",
+        "overwrittenNumClusters": 20,
+        "agglomerativeClusteringDistThresh": 3.5,
+        "hdbscanMinClusterSize": 5,
+        "numReassignmentIterations": 4,
+        "spatioTemporalDistLambda": 0.18268054582489002,
+        "spatioTemporalDistType": "pairwise",
+        "suppressOverlappingBehaviors": false,
+        "meanEmbeddingsUpdateRate": 0.1,
+        "skipAssignedBehaviors": false
+    },
+    "streaming": {
+        "kafkaBootstrapServers": "localhost:9092",
+        "kafkaProducerLingerMs": 0,
+        "kafkaMicroBatchIntervalSec": 1.0,
+        "kafkaRawConsumerPollTimeoutMs": 100,
+        "kafkaNotificationConsumerPollTimeoutMs": 50,
+        "kafkaConsumerMaxRecordsPerPoll": 100000,
+        "sendEmptyMtmcPlusMessages": true,
+        "mtmcPlusNumProcessesMax": 8
+    }
+}

@@ -1,0 +1,154 @@
+################################################################################
+# Copyright (c) 2024, NVIDIA CORPORATION.  All rights reserved.
+# NVIDIA Corporation and its licensors retain all intellectual property
+# and proprietary rights in and to this software, related documentation
+# and any modifications thereto.  Any use, reproduction, disclosure or
+# distribution of this software and related documentation without an express
+# license agreement from NVIDIA Corporation is strictly prohibited.
+################################################################################
+
+# this folder with be zipped and send to the backend server.
+# it must contain all the files necessary for preprocessing
+# and processing.
+# The arg0 from preprocessing and processing will be run
+# from the root of this folder.
+folder_to_send: "../../apps/ds_app/dummy_content"
+
+# the preprocess command line to be run will be created as follows:
+# <binary> + <supplementary_files>
+preprocessing:
+  ignore: true # set to true if there is nothing to preprocess, false otherwise
+  # this string will be replaced by the appropriate filename if in input_files_keys
+  arg0: ""
+  # these space separated strings will be replaced by the appropriate filename if in input_files_keys
+  supplementary_args: ""
+  # Rules:
+  # 1. Each element must be a filepath
+  # 2. The produced files must be in the same directory as arg0
+  # 3. These files will be used for the processing step
+  produced_files: [ ]
+
+# the process command line to be run will be created as follows:
+# <arg0> + <input.yaml> + <output.yaml> + <supplementary_args>
+# <input.yaml> and <output.yaml> are chosen by the backend server
+# This node was formerly named PipeExec + PipeEval
+processing:
+  arg0: "DsAppServer"
+  # these space separated strings will be replaced by the appropriate filename if in input_files_keys
+  supplementary_args: ""
+  # tree of values to generate <input.yaml>
+  # 1. Each leaf of this tree must be whether:
+  #   a. list of 4 elements (min, max)
+  #   b. a single element
+  # 2. The same tree shape will be kept
+  # 3. If the leaf is a list of [min, max, scale type, value type],
+  # the optimizer will pick a value in these range
+  # to converge to a better solution
+  parameter_space:
+    Init:
+      Exec:
+        streamRes: "1080" # stream resolution
+        containerImageID: "container_deepstream" # DeepStream container ID (automatically overwritten with an available container after launching)
+        rootPath: "/media/sdb/pipe-tuner-sample/" # sample data root path (automatically overwritten with the actual sample data root path after launching)
+
+        # pipeline config files
+        dsAppPath: "configs/config_GuiTool/config_GuiTool_template_trackeval.yml" # pipeline execution and evaluation config file
+        pgiePath: "configs/config_PGIE/config_infer_primary_PeopleNet_Transformer.txt" # PGIE config file
+        trackerPath: "configs/config_Tracker/config_tracker_NvDCF_accuracy_SWIN_3D.yml" # tracker config file
+
+        # Dataset info
+        datasetPath: "data/SDG_1min_videos"
+        seqmapPath: "data/SDG_1min_utils/SDG_1min_all.txt"
+      Eval:
+        metric: 'MOTA' # Metric used to measure prediction accuracy across ['MOTA', 'IDF1', 'HOTA']
+
+    NvDCF:
+      BaseConfig:
+        minDetectorConfidence: [ 0,0.4,linear,real ]
+      StateEstimator: # For 3D tracking (when setting trackerPath: config_tracker_NvDCF_accuracy_ResNet50_3D)
+        processNoiseVar4Loc: [ 10,500,linear,real ] # Process noise variance for bbox center
+        processNoiseVar4Vel: [ 10,500,linear,real ] # Process noise variance for velocity
+        measurementNoiseVar4Tracker: [ 10000,100000,linear,real ] # Measurement noise variance for tracker's localization
+      TrajectoryManagement:
+        minMatchingScore4Overall: [ 0,0.9,linear,real ]  # min matching score for overall
+        minTrackletMatchingScore: [ 0,0.9,linear,real ] # min tracklet similarity score for matching
+        minMatchingScore4ReidSimilarity: [ 0,0.9,linear,real ] # min reid similarity score for re-assoc
+        matchingScoreWeight4TrackletSimilarity: [ 0,0.9,linear,real ]  # weight for tracklet similarity score
+        matchingScoreWeight4ReidSimilarity:  [ 0,0.9,linear,real ] # weight for reid similarity score
+        minTrajectoryLength4Projection: [ 5,40,linear,int ] # min trajectory length required to make projected trajectory
+        trajectoryProjectionLength: [ 10,150,linear,int ] # the length of the trajectory during which the state estimator is updated to make projections
+        maxAngle4TrackletMatching: [ 60,180,linear,int ] # max angle difference for tracklet matching [degree]
+        minSpeedSimilarity4TrackletMatching: [ 0,0.1,linear,real ] # min speed similarity for tracklet matching
+        minBboxSizeSimilarity4TrackletMatching: [ 0,1.0,linear,real ] # min bbox size similarity for tracklet matching
+        reidExtractionInterval: [ 0,50,linear,int ]  # frame interval to extract reid features per target
+      TargetManagement:
+        enableBboxUnClipping: [ 0,1,linear,int ]   # In case the bbox is likely to be clipped by image border, unclip bbox
+        minIouDiff4NewTarget: [ 0.1,0.9,linear,real ] # If the IOU between the newly detected object and any of the existing targets is higher than this threshold, this newly detected object will be discarded.
+        minTrackerConfidence: [ 0.1,0.9,linear,real ] # If the confidence of an object tracker is lower than this on the fly, then it will be tracked in shadow mode. Valid Range: [0.0, 1.0]
+        probationAge: [ 1,10,linear,int ] # If the target's age exceeds this, the target will be considered to be valid.
+        maxShadowTrackingAge: [ 0,100,linear,int ] # Max length of shadow tracking. If the shadowTrackingAge exceeds this limit, the tracker will be terminated.
+      DataAssociator:
+        minMatchingScore4Overall: [ 0,0.9,linear,real ] # Min total score
+        minMatchingScore4SizeSimilarity: [ 0,0.9,linear,real ] # Min bbox size similarity score
+        minMatchingScore4Iou: [ 0,0.9,linear,real ] # Min IOU score
+        minMatchingScore4VisualSimilarity: [ 0,0.9,linear,real ] # Min visual similarity score
+        matchingScoreWeight4VisualSimilarity: [ 0,1.0,linear,real ] # Weight for the visual similarity (in terms of correlation response ratio)
+        matchingScoreWeight4SizeSimilarity: [ 0,1.0,linear,real ] # Weight for the Size-similarity score
+        matchingScoreWeight4Iou: [ 0,1.0,linear,real ] # Weight for the IOU score
+        tentativeDetectorConfidence: [ 0.1, 0.9,linear,real ]  # If a detection's confidence is lower than this but higher than minDetectorConfidence, then it's considered as a tentative detection
+        minMatchingScore4TentativeIou: [ 0.1, 0.9,linear,real ]  # Min iou threshold to match targets and tentative detection
+      VisualTracker:
+        featureFocusOffsetFactor_y: [ -0.5,0.5,linear,real ] # The offset for the center of hanning window relative to the feature height. The center of hanning window would move by (featureFocusOffsetFactor_y*featureMatSize.height) in vertical direction
+        filterLr: [ 0.01,0.5,linear,real ] # learning rate for DCF filter in exponential moving average. Valid Range: [0.0, 1.0]
+        filterChannelWeightsLr: [ 0.01,0.1,linear,real ] # learning rate for the channel weights among feature channels. Valid Range: [0.0, 1.0]
+        gaussianSigma: [ 0.01,1.8,linear,real ] # Standard deviation for Gaussian for desired response when creating DCF filter [pixels]
+
+    PGIE:
+      "[class-attrs-all]":
+        pre-cluster-threshold: [ 0,0.5,linear,real ] # Detection threshold to be applied prior to clustering operation
+
+# configs for PipeTuner server to run inside PipeTuner container
+servers:
+  server1:
+    ip: "127.0.0.1"
+    # port will be overwritten runtime
+    port: "50001"
+    # worker number is recommended equal to the number of optimizers used
+    worker_number: 2
+
+# optimizaiton manager configs
+optim_manager:
+  # threshold for the number of 0 scores
+  threshold_zero_scores: 20
+  # threshold for the number of DS app fails
+  threshold_ds_app_fails: 3
+
+# black box optimization configs
+bbo:
+  # need to set as false to maximize accuracy metric
+  problem_type_is_min: false
+  # optimizer job batch size
+  job_batch_size: 1
+  # different optimizers for tuning. Comment or uncomment to select different optimizers
+  # change max_iteration to set tuning iterations
+  optimizers:
+    type1:
+      name: "pysot"
+      max_iteration: 100
+      redundancy: 1
+      batch_size: 1
+    type2:
+      name: "hyper"
+      max_iteration: 100
+      redundancy: 1
+      batch_size: 1
+#    type3:
+#      name: "opentuner"
+#      max_iteration: 100
+#      redundancy: 1
+#      batch_size: 1
+#    type4:
+#      name: "scikit"
+#      max_iteration: 100
+#      redundancy: 1
+#      batch_size: 1
