@@ -53,6 +53,7 @@ RUN if [ $(uname -m) = "aarch64" ]; \
     fi
 
 # Update to TensorRT 10.5.0
+ENV LD_LIBRARY_PATH=/TensorRT-${TRT_SUBVER}/lib:$LD_LIBRARY_PATH
 RUN if [ $(uname -m) = "aarch64" ]; \
         then export TRT_DOWNLOAD=https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/${TRT_VER}/tars/TensorRT-${TRT_SUBVER}.l4t.aarch64-gnu.cuda-${CUDA_VER}.tar.gz; \
         else export TRT_DOWNLOAD=https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/${TRT_VER}/tars/TensorRT-${TRT_SUBVER}.Linux.x86_64-gnu.cuda-${CUDA_VER}.tar.gz; \
@@ -61,7 +62,6 @@ RUN if [ $(uname -m) = "aarch64" ]; \
     mkdir /TensorRT-${TRT_SUBVER} && \
     tar -xzvf /TensorRT-${TRT_SUBVER}.tar.gz -C / && \
     cd /TensorRT-${TRT_SUBVER}/python && \
-    export LD_LIBRARY_PATH=/TensorRT-${TRT_SUBVER}/lib:$LD_LIBRARY_PATH && \
     if [ $(uname -m) = "aarch64" ]; \
     then \
         python3 -m pip install tensorrt-${TRT_VER}-cp${CPYTHON_VER}-none-linux_aarch64.whl; \
