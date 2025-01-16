@@ -12,9 +12,7 @@ RUN /opt/nvidia/deepstream/deepstream/user_additional_install.sh && \
 
 # Download ReID model
 RUN mkdir /opt/nvidia/deepstream/deepstream/samples/models/Tracker && \
-    wget -O /opt/nvidia/deepstream/deepstream/samples/models/Tracker/reid_model.zip --content-disposition https://api.ngc.nvidia.com/v2/models/nvidia/tao/reidentificationnet/versions/deployable_v1.2/zip && \
-    unzip -o /opt/nvidia/deepstream/deepstream/samples/models/Tracker/reid_model.zip -d /opt/nvidia/deepstream/deepstream/samples/models/Tracker/ && \
-    rm /opt/nvidia/deepstream/deepstream/samples/models/Tracker/reid_model.zip
+    wget -O /opt/nvidia/deepstream/deepstream/samples/models/Tracker/resnet50_market1501_aicity156.onnx --content-disposition https://api.ngc.nvidia.com/v2/models/org/nvidia/team/tao/reidentificationnet/deployable_v1.2/files?redirect=true&path=resnet50_market1501_aicity156.onnx
 
 # Install and update packages
 RUN apt-get update && \
@@ -49,7 +47,7 @@ RUN if [ $(uname -m) = "aarch64" ]; \
         ldconfig; \
         rm -rf /opencv_build; \
     else \
-        apt-get install libopencv-dev; \
+        apt-get install -y libopencv-dev; \
     fi
 
 # Update to TensorRT 10.5.0
