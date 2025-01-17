@@ -148,8 +148,11 @@ then
 
 	# Download Detector used by PGIE and update PGIE configs
 	DET_ZIP=$NGC_DOWNLOAD/peoplenet_deployable_quantized.zip
-	wget --content-disposition https://api.ngc.nvidia.com/v2/models/nvidia/tao/peoplenet/versions/deployable_quantized_v2.6.1/zip -O $DET_ZIP
-	unzip -o $DET_ZIP -d $MODEL_DIR
+	#wget --content-disposition https://api.ngc.nvidia.com/v2/models/nvidia/tao/peoplenet/versions/deployable_quantized_v2.6.1/zip -O $DET_ZIP
+	#unzip -o $DET_ZIP -d $MODEL_DIR
+	wget --content-disposition 'https://api.ngc.nvidia.com/v2/models/org/nvidia/team/tao/peoplenet/pruned_quantized_decrypted_v2.3.4/files?redirect=true&path=resnet34_peoplenet_int8.onnx' -O $MODEL_DIR/resnet34_peoplenet_int8.onnx
+	wget --content-disposition 'https://api.ngc.nvidia.com/v2/models/org/nvidia/team/tao/peoplenet/pruned_quantized_decrypted_v2.3.4/files?redirect=true&path=resnet34_peoplenet_int8.txt' -O $MODEL_DIR/resnet34_peoplenet_int8.txt
+	wget --content-disposition 'https://api.ngc.nvidia.com/v2/models/org/nvidia/team/tao/peoplenet/pruned_quantized_decrypted_v2.3.4/files?redirect=true&path=labels.txt' -O $MODEL_DIR/labels.txt
 	update_config_pgie_ds;
 
 	# Download YOLO based models
