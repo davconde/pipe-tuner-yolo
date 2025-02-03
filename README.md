@@ -1,4 +1,6 @@
 # pipe-tuner-yolo
+[![DOI](https://zenodo.org/badge/906184619.svg)](https://doi.org/10.5281/zenodo.14797256)
+
 NVIDIA PipeTuner data and tools for the optimization of a MOT DeepStream pipeline.
 
 ## Get access to the NVIDIA NGC Catalog:
