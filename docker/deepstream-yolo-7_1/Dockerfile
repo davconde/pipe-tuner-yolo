@@ -3,6 +3,7 @@ FROM nvcr.io/nvidia/deepstream:7.1-triton-multiarch
 ARG DS_VER=7.1
 ARG CUDA_VER=12.6
 ARG TRT_VER=10.5.0
+# Check subversions at https://developer.nvidia.com/tensorrt/download/10x
 ARG TRT_SUBVER=10.5.0.18
 ARG CPYTHON_VER=310
 
@@ -62,13 +63,13 @@ RUN if [ $(uname -m) = "aarch64" ]; \
     cd /TensorRT-${TRT_SUBVER}/python && \
     if [ $(uname -m) = "aarch64" ]; \
     then \
-        python3 -m pip install tensorrt-${TRT_VER}-cp${CPYTHON_VER}-none-linux_aarch64.whl; \
-        python3 -m pip install tensorrt_dispatch-${TRT_VER}-cp${CPYTHON_VER}-none-linux_aarch64.whl; \
-        python3 -m pip install tensorrt_lean-${TRT_VER}-cp${CPYTHON_VER}-none-linux_aarch64.whl; \
+        python3 -m pip install tensorrt-*-cp${CPYTHON_VER}-none-linux_aarch64.whl; \
+        python3 -m pip install tensorrt_dispatch-*-cp${CPYTHON_VER}-none-linux_aarch64.whl; \
+        python3 -m pip install tensorrt_lean-*-cp${CPYTHON_VER}-none-linux_aarch64.whl; \
     else \
-        python3 -m pip install tensorrt-${TRT_VER}-cp${CPYTHON_VER}-none-linux_x86_64.whl; \
-        python3 -m pip install tensorrt_dispatch-${TRT_VER}-cp${CPYTHON_VER}-none-linux_x86_64.whl; \
-        python3 -m pip install tensorrt_lean-${TRT_VER}-cp${CPYTHON_VER}-none-linux_x86_64.whl; \
+        python3 -m pip install tensorrt-*-cp${CPYTHON_VER}-none-linux_x86_64.whl; \
+        python3 -m pip install tensorrt_dispatch-*-cp${CPYTHON_VER}-none-linux_x86_64.whl; \
+        python3 -m pip install tensorrt_lean-*-cp${CPYTHON_VER}-none-linux_x86_64.whl; \
     fi
 
 # Install DeepStream-Yolo with OpenCV support
